@@ -1534,6 +1534,8 @@ class _Producion_QC_MainFormState extends State<Producion_QC_MainForm> {
     });
     var request = http.MultipartRequest(
         "POST", Uri.parse("${clientUrl}QC/UpdateQCProductionSaveData"));
+
+    // Add fields
     request.fields['QC_Date'] = DateFormat('MM/dd/yyyy')
         .format(DoPandingListData.data[0].date)
         .toString();
@@ -1550,62 +1552,83 @@ class _Producion_QC_MainFormState extends State<Producion_QC_MainForm> {
     request.fields['Contractor_Name'] = selectedContractorCode.toString();
     request.fields['Welding_Contractor'] = selectedWelderrCode.toString();
     request.fields['Drg_Weight'] = drgWaightController.text.toString();
-    request.fields['Assembly_Weight'] =
-        AssemblyWaightController.text.toString();
+    request.fields['Assembly_Weight'] = AssemblyWaightController.text.toString();
     request.fields['Inspection_By'] = Inspection_ByController.text.toString();
-    for (int i = 0; i < images.length; i++) {
-      request.files.add(http.MultipartFile(
-          'files',
-          File(images[i].path).readAsBytes().asStream(),
-          File(images[i].path).lengthSync(),
-          filename: images[i].path.split("/").last));
-    }
-    for (var element in request.files) {
-      log('Image Array ==> ${element.filename}');
-    }
-    var response = await request.send();
-    // Parse the string into a JSON object
-    setState(() {
-      isLoading = false;
+
+    // Log all fields
+    request.fields.forEach((key, value) {
+      log("Field: $key => Value: $value");
     });
-    var responseString = await response.stream.bytesToString();
-    var responseJson = jsonDecode(responseString);
-    log("=======>${responseJson.toString()}");
-    if (response.statusCode == 200) {
-      // var responseString = await response.stream.bytesToString();  // Read the response as a string
-      // var responseJson = jsonDecode(responseString);
-      if (responseJson['settings']['success'] == '1') {
-        setState(() {
-          Fluttertoast.showToast(
-              msg: responseJson['message']
-                  .toString()
-                  .toUpperCase(), // Show specific message if available
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              gravity: ToastGravity.CENTER);
-          widget.tabController.animateTo(1);
-        });
+
+    // Add files
+    for (int i = 0; i < images.length; i++) {
+      var file = http.MultipartFile(
+        'files',
+        File(images[i].path).readAsBytes().asStream(),
+        File(images[i].path).lengthSync(),
+        filename: images[i].path.split("/").last,
+      );
+      request.files.add(file);
+      log("File added: ${file.filename}, Path: ${images[i].path}");
+    }
+
+    // Log all files
+    for (var file in request.files) {
+      log('File Array ==> Filename: ${file.filename}');
+    }
+
+    try {
+      var response = await request.send();
+      setState(() {
+        isLoading = false;
+      });
+      var responseString = await response.stream.bytesToString();
+      var responseJson = jsonDecode(responseString);
+      log("Response JSON: ${responseJson.toString()}");
+
+      if (response.statusCode == 200) {
+        if (responseJson['settings']['success'] == '1') {
+          setState(() {
+            Fluttertoast.showToast(
+                msg: responseJson['message']
+                    .toString()
+                    .toUpperCase(), // Show specific message if available
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                gravity: ToastGravity.CENTER);
+            widget.tabController.animateTo(1);
+          });
+        } else {
+          if (!mounted) return;
+          setState(() {
+            Fluttertoast.showToast(
+                msg: responseJson['message'] ?? "Upload failed!",
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                gravity: ToastGravity.CENTER);
+          });
+        }
       } else {
         if (!mounted) return;
-        setState(() {
-          Fluttertoast.showToast(
-              msg: responseJson['message'] ??
-                  "Upload failed!", // Show specific message if available
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              gravity: ToastGravity.CENTER);
-        });
+        Fluttertoast.showToast(
+            msg: "Something went wrong!",
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            gravity: ToastGravity.CENTER);
       }
-    } else {
-      if (!mounted) return;
-      setState(() {});
+    } catch (e) {
+      log("Error: $e");
+      setState(() {
+        isLoading = false;
+      });
       Fluttertoast.showToast(
-          msg: "Something wrongg!",
+          msg: "An error occurred!",
           backgroundColor: Colors.red,
           textColor: Colors.white,
           gravity: ToastGravity.CENTER);
     }
   }
+
 
   Future<void> UpdateStatus() async {
     setState(() {

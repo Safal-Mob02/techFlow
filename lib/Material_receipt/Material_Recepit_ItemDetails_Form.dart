@@ -58,6 +58,7 @@ class _Material_Recepit_ItemDetails_FormState
   TextEditingController DrgWeightController = TextEditingController();
   TextEditingController SizeController = TextEditingController();
   TextEditingController StructureController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
   var FebricationContractorCode;
   var SizeCode;
   var StructureCode;
@@ -87,6 +88,7 @@ class _Material_Recepit_ItemDetails_FormState
   var LocationWiseStockListing;
 
   var SizeData;
+  var locationData;
   var StructureData;
 
   var ContractorNameData;
@@ -119,6 +121,7 @@ class _Material_Recepit_ItemDetails_FormState
       DrgWeightController.text=widget.FormData.drgWeight.toString();
       SizeController.text=widget.FormData.size.toString();
       StructureController.text=widget.FormData.structure.toString();
+      locationController.text=widget.FormData.location.toString();
 
 
       log("Unit ID${widget.FormData.unitCode}");
@@ -150,6 +153,7 @@ class _Material_Recepit_ItemDetails_FormState
       GetStockLocationWise();
       GetContractorName("");
       GetSizeList("");
+      GetLocationList("");
 
       AttachmentList();
     }));
@@ -252,6 +256,281 @@ class _Material_Recepit_ItemDetails_FormState
                   SizedBox(
                     height: 10,
                   ),
+                  TextFormField(
+                    style: const TextStyle(color: Colors.black),
+                    controller: locationController,
+                    // initialValue: "${widget.FormData.itemName}",
+                    readOnly: true,
+                    keyboardType: TextInputType.emailAddress,
+                    onTap: () {
+                      setState(() {});
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext context) {
+                          return StatefulBuilder(
+                              builder: (context, setState) {
+                                return locationData != null
+                                    ? AlertDialog(
+                                  title: const Text('Select location'),
+                                  content: Container(
+                                    width: double.maxFinite,
+                                    //  constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          CupertinoSearchTextField(
+                                            controller: _searchController,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                GetSizeList(value);
+                                                //isLoading = true;
+                                                GetLocationList(value).then((data) {
+                                                  setState(() {
+                                                    locationData = data;
+                                                    //log(data.data.toString());
+                                                    isLoading = false;
+                                                  });
+                                                }).catchError((error) {
+                                                  setState(() {
+                                                    isLoading = false;
+                                                    // Handle error if necessary
+                                                  });
+                                                });
+                                              });
+                                            },
+                                          ),
+                                          if (isLoading) Center(
+                                            child: Lottie.asset(
+                                              'Assets/loading.json',
+                                              width: 100,
+                                              height: 100,
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ) else Container(
+                                            height: MediaQuery.of(context).size.height,
+                                            child: ListView.builder(
+                                              itemCount:
+                                              locationData
+                                              ['data'].length,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                  int index) {
+                                                //final item = filteredItems[index];
+                                                return InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      locationController.text=locationData['data'][index]['Select_Value'].toString();
+                                                      //SizeCode=SizeData['Data'][index]['Select_Value_Code'].toString();
+                                                      LocationCode=locationData['data'][index]['Select_Value_Code'].toString();
+                                                      //GetStructureList("");
+                                                      Navigator.pop(
+                                                          context);
+                                                    });
+
+                                                  },
+                                                  child: ListTile(
+                                                    title: Text(
+                                                      "${locationData['data'][index]['Select_Value'].toString()}",
+                                                      style: const TextStyle(
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w500,
+                                                          fontSize: 15,
+                                                          color: Colors
+                                                              .black),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  // actions: <Widget>[
+                                  //   TextButton(
+                                  //     onPressed: () {
+                                  //       Navigator.of(context).pop();
+                                  //     },
+                                  //     child: Text('Cancel'),
+                                  //   ),
+                                  //   TextButton(
+                                  //     onPressed: () {
+                                  //       // Do something with the selected items
+                                  //       print('Selected Items: $selectedItem');
+                                  //       // Close the dialog
+                                  //       Navigator.of(context).pop();
+                                  //     },
+                                  //     child: Text('Done'),
+                                  //   ),
+                                  // ],
+                                )
+                                    : const AlertDialog(
+                                  title: Text('No Data Available'),
+                                );
+                                ;
+                              });
+                        },
+                      );
+                    },
+                    decoration: inputDecoration(
+                        focusedBorder: myfocusborder(),
+                        enabledBorder: myinputborder(),
+                        postfixIcon: const Icon(Icons.arrow_drop_down,size: 30,),
+                        hintText: '',
+                        labelText: 'Location'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please fill this field';
+                      }
+                      return null;
+                    },
+                  ),
+                  // TextFormField(
+                  //   controller: LocationController,
+                  //   readOnly: true,
+                  //   keyboardType: TextInputType.emailAddress,
+                  //   onTap: () {
+                  //     setState(() {});
+                  //     showDialog(
+                  //       context: context,
+                  //       barrierDismissible: false,
+                  //       builder: (BuildContext context) {
+                  //         return StatefulBuilder(
+                  //             builder: (context, setState) {
+                  //               return LocationResponseData != null
+                  //                   ? AlertDialog(
+                  //                 title: const Text('Select Location'),
+                  //                 content: Container(
+                  //                   width: double.maxFinite,
+                  //                   //  constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+                  //                   child: Column(
+                  //                     crossAxisAlignment:
+                  //                     CrossAxisAlignment.start,
+                  //                     mainAxisSize: MainAxisSize.min,
+                  //                     children: [
+                  //                       CupertinoSearchTextField(
+                  //                         controller: _searchController,
+                  //                         onChanged: (value) {
+                  //                           setState(() {
+                  //                             GetLocation(value);
+                  //                             isLoading = true;
+                  //                             GetLocation(value)
+                  //                                 .then((data) {
+                  //                               setState(() {
+                  //                                 LocationResponseData =
+                  //                                     data;
+                  //                                 log(data.data.toString());
+                  //                                 isLoading = false;
+                  //                               });
+                  //                             }).catchError((error) {
+                  //                               setState(() {
+                  //                                 isLoading = false;
+                  //                                 // Handle error if necessary
+                  //                               });
+                  //                             });
+                  //                           });
+                  //                         },
+                  //                       ),
+                  //                       const SizedBox(height: 10),
+                  //                       isLoading
+                  //                           ? Center(
+                  //                         child: Lottie.asset(
+                  //                           'Assets/loading.json',
+                  //                           width: 100,
+                  //                           height: 100,
+                  //                           fit: BoxFit.fill,
+                  //                         ),
+                  //                       )
+                  //                           : Container(
+                  //                         height: 200,
+                  //                         child: ListView.builder(
+                  //                           itemCount:
+                  //                           LocationResponseData
+                  //                               .data.length,
+                  //                           itemBuilder:
+                  //                               (BuildContext context,
+                  //                               int index) {
+                  //                             //final item = filteredItems[index];
+                  //                             return InkWell(
+                  //                               onTap: () {
+                  //                                 setState(() {
+                  //                                   LocationController.text = "${LocationResponseData.data[index].selectValue.toString()} (Stock: ${LocationResponseData.data[index].stock.toString()})";
+                  //                                   SelectedStock=LocationResponseData.data[index].stock.toString();
+                  //                                   StockController.text=LocationResponseData.data[index].stock.toString();
+                  //                                   LocationCode = LocationResponseData.data[index].selectValueCode;
+                  //                                   Navigator.pop(
+                  //                                       context);
+                  //                                   log("Location ID $LocationCode");
+                  //                                 });
+                  //
+                  //                               },
+                  //                               child: ListTile(
+                  //                                   title: Text(
+                  //                                     "${LocationResponseData.data[index].selectValue.toString()} (Stock: ${LocationResponseData.data[index].stock.toString()})",
+                  //                                     style: const TextStyle(
+                  //                                         fontWeight:
+                  //                                         FontWeight
+                  //                                             .w500,
+                  //                                         fontSize: 15,
+                  //                                         color: Colors
+                  //                                             .black),
+                  //                                   )),
+                  //                             );
+                  //                           },
+                  //                         ),
+                  //                       ),
+                  //                     ],
+                  //                   ),
+                  //                 ),
+                  //                 // actions: <Widget>[
+                  //                 //   TextButton(
+                  //                 //     onPressed: () {
+                  //                 //       Navigator.of(context).pop();
+                  //                 //     },
+                  //                 //     child: Text('Cancel'),
+                  //                 //   ),
+                  //                 //   TextButton(
+                  //                 //     onPressed: () {
+                  //                 //       // Do something with the selected items
+                  //                 //       print('Selected Items: $selectedItem');
+                  //                 //       // Close the dialog
+                  //                 //       Navigator.of(context).pop();
+                  //                 //     },
+                  //                 //     child: Text('Done'),
+                  //                 //   ),
+                  //                 // ],
+                  //               )
+                  //                   : const AlertDialog(
+                  //                 title: Text('No Data Available'),
+                  //               );
+                  //               ;
+                  //             });
+                  //       },
+                  //     );
+                  //   },
+                  //   decoration: inputDecoration(
+                  //       focusedBorder: myfocusborder(),
+                  //       enabledBorder: myinputborder(),
+                  //       postfixIcon: Icon(Icons.arrow_drop_down,size: 30,),
+                  //       // prefixIcon: Icon(Icons.email_outlined),
+                  //       hintText: '',
+                  //       labelText: 'Location'),
+                  //   validator: (value) {
+                  //     if (value == null || value.isEmpty) {
+                  //       return 'Please fill this field';
+                  //     }
+                  //     return null;
+                  //   },
+                  // ),
+                  SizedBox(
+                    height: 10,
+                  ),
                   if(widget.FormData.process=="Cutting")
                   Column(
                     children: [
@@ -347,9 +626,9 @@ class _Material_Recepit_ItemDetails_FormState
                       ),
                       TextFormField(
                         style: TextStyle(color: Colors.grey),
-                        //  controller: _emailController,
-                        initialValue: "${widget.FormData.quantity}",
-                        readOnly: true,
+                        controller: QuantityController,
+                        //initialValue: "${widget.FormData.quantity}",
+                        readOnly: false,
                         keyboardType: TextInputType.emailAddress,
                         decoration: inputDecoration(
                             focusedBorder: myfocusborder(),
@@ -367,6 +646,7 @@ class _Material_Recepit_ItemDetails_FormState
                       SizedBox(
                         height: 10,
                       ),
+
 
                     ],
                   ),
@@ -442,9 +722,9 @@ class _Material_Recepit_ItemDetails_FormState
                         ),
                         TextFormField(
                           style: TextStyle(color: Colors.grey),
-                          //  controller: _emailController,
-                          initialValue: "${widget.FormData.quantity}",
-                          readOnly: true,
+                           controller: QuantityController,
+                          //initialValue: "${widget.FormData.quantity}",
+                          readOnly: false,
                           keyboardType: TextInputType.emailAddress,
                           decoration: inputDecoration(
                               focusedBorder: myfocusborder(),
@@ -777,9 +1057,9 @@ class _Material_Recepit_ItemDetails_FormState
                         ),
                         TextFormField(
                           style: TextStyle(color: Colors.grey),
-                          //  controller: _emailController,
-                          initialValue: "${widget.FormData.quantity}",
-                          readOnly: true,
+                          controller: QuantityController,
+                          //initialValue: "${widget.FormData.quantity}",
+                          readOnly: false,
                           keyboardType: TextInputType.emailAddress,
                           decoration: inputDecoration(
                               focusedBorder: myfocusborder(),
@@ -1028,9 +1308,9 @@ class _Material_Recepit_ItemDetails_FormState
                         ),
                         TextFormField(
                           style: TextStyle(color: Colors.grey),
-                          //  controller: _emailController,
-                          initialValue: "${widget.FormData.quantity}",
-                          readOnly: true,
+                          controller: QuantityController,
+                          //initialValue: "${widget.FormData.quantity}",
+                          readOnly: false,
                           keyboardType: TextInputType.emailAddress,
                           decoration: inputDecoration(
                               focusedBorder: myfocusborder(),
@@ -1709,9 +1989,9 @@ class _Material_Recepit_ItemDetails_FormState
                         ),
                         TextFormField(
                           style: TextStyle(color: Colors.grey),
-                          //  controller: _emailController,
-                          initialValue: "${widget.FormData.quantity}",
-                          readOnly: true,
+                          controller: QuantityController,
+                          //initialValue: "${widget.FormData.quantity}",
+                          readOnly: false,
                           keyboardType: TextInputType.emailAddress,
                           decoration: inputDecoration(
                               focusedBorder: myfocusborder(),
@@ -2461,9 +2741,9 @@ class _Material_Recepit_ItemDetails_FormState
                         ),
                         TextFormField(
                           style: TextStyle(color: Colors.grey),
-                          //  controller: _emailController,
-                          initialValue: "${widget.FormData.quantity}",
-                          readOnly: true,
+                          controller: QuantityController,
+                          //initialValue: "${widget.FormData.quantity}",
+                          readOnly: false,
                           keyboardType: TextInputType.emailAddress,
                           decoration: inputDecoration(
                               focusedBorder: myfocusborder(),
@@ -2598,9 +2878,9 @@ class _Material_Recepit_ItemDetails_FormState
                         ),
                         TextFormField(
                           style: TextStyle(color: Colors.grey),
-                          //  controller: _emailController,
-                          initialValue: "${widget.FormData.quantity}",
-                          readOnly: true,
+                          controller: QuantityController,
+                          //initialValue: "${widget.FormData.quantity}",
+                          readOnly: false,
                           keyboardType: TextInputType.emailAddress,
                           decoration: inputDecoration(
                               focusedBorder: myfocusborder(),
@@ -3835,55 +4115,58 @@ class _Material_Recepit_ItemDetails_FormState
                 ),
               ),
             ),
-            Flexible(
-              child: Container(
-                color: Colors.white,
-                padding: const EdgeInsets.only(
-                    left: 5.0, right: 15.0, top: 0, bottom: 10),
-                child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      if(widget.status!="Approved"&&widget.status!="Forwarded"){
-                        if (TCRequiredValue == "Yes") {
-                          if (imageFiles.length > 0 ||
-                              descriptions.isNotEmpty) {
-                            SaveData(imageFiles);
+            Visibility(
+              visible:widget.status!="Approved"&&widget.status!="Forwarded",
+              child: Flexible(
+                child: Container(
+                  color: Colors.white,
+                  padding: const EdgeInsets.only(
+                      left: 5.0, right: 15.0, top: 0, bottom: 10),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        if(widget.status!="Approved"&&widget.status!="Forwarded"){
+                          if (TCRequiredValue == "Yes") {
+                            if (imageFiles.length > 0 ||
+                                descriptions.isNotEmpty) {
+                              SaveData(imageFiles);
+                            } else {
+                              Fluttertoast.showToast(
+                                msg: "Please Attach Image",
+                                textColor: Colors.white,
+                                backgroundColor: Colors.red,
+                                gravity: ToastGravity.CENTER,
+                              );
+                            }
                           } else {
-                            Fluttertoast.showToast(
-                              msg: "Please Attach Image",
-                              textColor: Colors.white,
-                              backgroundColor: Colors.red,
-                              gravity: ToastGravity.CENTER,
-                            );
+                            SaveData(imageFiles);
                           }
-                        } else {
-                          SaveData(imageFiles);
+                          //SaveData();
+                        }else{
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) =>  Material_Receipt_ItemList(Urn:widget.Urn,CategoryCode:widget.CategoryCode,categoryName: widget.categoryName,docNo:widget.docNo, status: widget.status,)));
                         }
-                        //SaveData();
-                      }else{
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) =>  Material_Receipt_ItemList(Urn:widget.Urn,CategoryCode:widget.CategoryCode,categoryName: widget.categoryName,docNo:widget.docNo, status: widget.status,)));
-                      }
 
-                      //  widget.tabController.animateTo(0);
-                    });
-                  },
-                  child: Container(
-                    //width: 100.0,
-                    height: 60.0,
-                    decoration: BoxDecoration(
-                      color: kMainColor,
-                      border: Border.all(color: Colors.white, width: 1.0),
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Save',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'poppins_regular',
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold),
+                        //  widget.tabController.animateTo(0);
+                      });
+                    },
+                    child: Container(
+                      //width: 100.0,
+                      height: 60.0,
+                      decoration: BoxDecoration(
+                        color: kMainColor,
+                        border: Border.all(color: Colors.white, width: 1.0),
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'Save',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'poppins_regular',
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ),
@@ -3950,6 +4233,8 @@ class _Material_Recepit_ItemDetails_FormState
       "Select_Valuecode": "",
       "Searchtext": SearchText,
       "CO_CODE":coCode,
+      "IT_Code":ItemNameCode,
+      "Process_code":processCode,
     };
     setState(() {
       isLoading = true;
@@ -3994,7 +4279,61 @@ class _Material_Recepit_ItemDetails_FormState
           backgroundColor: Colors.red[800],
           gravity: ToastGravity.BOTTOM);
     }
-    return SizeData;
+    return SizeData!=null ? SizeData:[];
+  }
+
+  Future<Map<String, dynamic>>  GetLocationList(SearchText) async {
+    Map data = {
+      "user_id": urCode,
+      "CO_CODE":coCode,
+      "URN_No":widget.Urn,
+      "Select_Valuecode":widget.Urn,
+      "item_filertext":SearchText,
+    };
+    setState(() {
+      isLoading = true;
+    });
+    final response = await http.post(
+      Uri.parse("${clientUrl}MobileApp_MaterialReceipt/MaterialReceiptLocationList"),
+      body: data,
+    );
+    log("${clientUrl}MobileApp_MaterialReceipt/MaterialReceiptLocationList$data");
+    log(response.body.toString());
+    setState(() {
+      isLoading = false;
+    });
+    var jsonData;
+    if (response.statusCode == 200) {
+      setState(() {
+        isLoading = false;
+      });
+      jsonData = json.decode(response.body);
+      var map = Map<String, dynamic>.from(jsonData);
+      log(map.toString());
+
+
+
+      if (map['settings']['success'] == "1") {
+        setState(() {
+          locationData = map;
+        });
+
+
+      } else {
+        Fluttertoast.showToast(
+            msg: "Data Not Found!",
+            textColor: Colors.white,
+            backgroundColor: Colors.red[800],
+            gravity: ToastGravity.BOTTOM);
+      }
+    } else {
+      Fluttertoast.showToast(
+          msg: "Something Wrong Please try again!",
+          textColor: Colors.white,
+          backgroundColor: Colors.red[800],
+          gravity: ToastGravity.BOTTOM);
+    }
+    return locationData;
   }
 
   Future<Map<String, dynamic>>  GetStructureList(SearchText) async {
@@ -4147,6 +4486,7 @@ class _Material_Recepit_ItemDetails_FormState
       request.fields['Size'] = SizeController.text.toString();
       request.fields['Structure'] = StructureController.text.toString();
       request.fields['Amount'] = amountController.text.toString();
+      request.fields['Quantity'] = QuantityController.text.toString();
 
       // Log the form data (payload)
       log("Form Data Payload: ${clientUrl}MaterialReceipt/UpdateMaterialReceiptItemDetails${request.fields}");
@@ -4192,6 +4532,19 @@ class _Material_Recepit_ItemDetails_FormState
                   categoryName: widget.categoryName,
                   docNo: widget.docNo,
                   status: widget.status, barcoderes:widget.barCodeRes,
+                ),
+              ),
+            );
+          }else{
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Material_Receipt_ItemList(
+                  Urn: widget.Urn,
+                  CategoryCode: widget.CategoryCode,
+                  categoryName: widget.categoryName,
+                  docNo: widget.docNo,
+                  status: widget.status, /*barcoderes:widget.barCodeRes,*/
                 ),
               ),
             );

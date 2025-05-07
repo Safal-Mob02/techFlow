@@ -42,6 +42,7 @@ class _MaterialIssue_TabPageState extends State<MaterialIssue_TabPage>
     _tabController.addListener(() {
       setState(() {});
     });
+
   }
 
   @override
@@ -516,6 +517,14 @@ class _Material_Receipt_ItemListState extends State<Material_Receipt_ItemList> {
 
   String? docNo;
 
+  bool _isChecked=false;
+
+  List<bool> _checkboxStates = [];
+
+  List<String> selectedSrNos = [];
+
+  String selectedSrNosJson='';
+
   // var _searchController;
   @override
   void initState() {
@@ -750,101 +759,76 @@ class _Material_Receipt_ItemListState extends State<Material_Receipt_ItemList> {
                                               .start,
                                           children: [
                                             Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .center,
-                                              //  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                              crossAxisAlignment: CrossAxisAlignment.start, // Align items to the top
                                               children: [
+                                                // Checkbox aligned to the top-left
+                                                // Align(
+                                                //   alignment: Alignment.topLeft,
+                                                //   child: Checkbox(
+                                                //     value: _checkboxStates[index],
+                                                //     onChanged: (bool? value) {
+                                                //       setState(() {
+                                                //         _checkboxStates[index] = value ?? false;
+                                                //
+                                                //         var srno = DoPandingListData.data[index].SR_No;
+                                                //
+                                                //         if (value == true) {
+                                                //           // Add the srno to the list if not already present
+                                                //           if (!selectedSrNos.contains(srno)) {
+                                                //             selectedSrNos.add(srno.toString());
+                                                //           }
+                                                //         } else {
+                                                //           // Remove the srno from the list if unchecked
+                                                //           selectedSrNos.remove(srno.toString());
+                                                //         }
+                                                //
+                                                //         selectedSrNosJson = jsonEncode(selectedSrNos);
+                                                //
+                                                //         print("Selected SR_No List: $selectedSrNosJson");
+                                                //       });
+                                                //     },
+                                                //   ),
+                                                // ),
+                                                // Spacer(),
+                                                // Container for the rest of the content
                                                 Container(
-                                                    decoration:
-                                                    BoxDecoration(
-                                                      borderRadius: BorderRadius.only(
-                                                          bottomLeft:
-                                                          Radius.circular(
-                                                              0)),
-                                                      // color: Colors.grey,
-                                                    ),
-                                                    alignment: Alignment
-                                                        .centerLeft,
-                                                    child: Column(
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                          EdgeInsets.all(
-                                                              5.0),
-                                                          child: Text(
-                                                            "Index",
-                                                            overflow:
-                                                            TextOverflow
-                                                                .ellipsis,
-                                                            style: TextStyle(
-                                                                fontWeight: FontWeight
-                                                                    .w500,
-                                                                color: Colors
-                                                                    .green,
-                                                                fontSize:
-                                                                14),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    )),
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: Container(
-                                                      alignment: Alignment
-                                                          .centerLeft,
-                                                      child: Padding(
-                                                        padding: EdgeInsets
-                                                            .only(
-                                                            left:
-                                                            5),
-                                                        child: Text(
-                                                          DoPandingListData
-                                                              .data[index]
-                                                              .index
-                                                              .toString() ??
-                                                              "---",
-                                                          overflow:
-                                                          TextOverflow
-                                                              .ellipsis,
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                              FontWeight
-                                                                  .w400,
-                                                              color: Colors
-                                                                  .black,
-                                                              fontSize:
-                                                              13),
-                                                        ),
-                                                      )),
-                                                ),
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: Padding(
-                                                    padding:
-                                                    EdgeInsets
-                                                        .all(5.0),
-                                                    child: Text(
-                                                      DoPandingListData
-                                                          .data[
-                                                      index]
-                                                          .soNo.toString() ??
-                                                          "---",
-                                                      overflow:
-                                                      TextOverflow
-                                                          .ellipsis,
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .bold,
-                                                          color: Colors
-                                                              .green,
-                                                          fontSize:
-                                                          14),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.only(
+                                                      bottomLeft: Radius.circular(0),
                                                     ),
                                                   ),
+                                                  alignment: Alignment.centerLeft,
+                                                  child: Row(
+                                                    crossAxisAlignment: CrossAxisAlignment.center, // Aligns the content vertically in the center
+                                                    children: [
+                                                      Padding(
+                                                        padding: EdgeInsets.all(5.0),
+                                                        child: Text(
+                                                          "Index",
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: TextStyle(
+                                                            fontWeight: FontWeight.w500,
+                                                            color: Colors.green,
+                                                            fontSize: 14,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding: EdgeInsets.only(left: 5,right: 5),
+                                                        child: Text(
+                                                          DoPandingListData.data[index].index.toString() ?? "---",
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: TextStyle(
+                                                            fontWeight: FontWeight.w400,
+                                                            color: Colors.black,
+                                                            fontSize: 13,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                                ///////////
+
                                               ],
                                             ),
                                             Row(
@@ -893,6 +877,32 @@ class _Material_Receipt_ItemListState extends State<Material_Receipt_ItemList> {
                                                       overflow:
                                                       TextOverflow
                                                           .ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Padding(
+                                                    padding:
+                                                    EdgeInsets
+                                                        .all(5.0),
+                                                    child: Text(
+                                                      DoPandingListData
+                                                          .data[
+                                                      index]
+                                                          .soNo.toString() ??
+                                                          "---",
+                                                      overflow:
+                                                      TextOverflow
+                                                          .ellipsis,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .bold,
+                                                          color: Colors
+                                                              .green,
+                                                          fontSize:
+                                                          14),
                                                     ),
                                                   ),
                                                 ),
@@ -1693,6 +1703,7 @@ class _Material_Receipt_ItemListState extends State<Material_Receipt_ItemList> {
       'CO_CODE': coCode,
       'Urn_no': widget.Urn,
       'UR_CODE': urCode,
+      //'SR_No': selectedSrNosJson,
     };
     log("Api Name: ${clientUrl}/MaterialReceipt/UpdateMaterialReceiptData $BODYDATA");
     final response = await http.post(
@@ -2036,6 +2047,7 @@ class _Material_Receipt_ItemListState extends State<Material_Receipt_ItemList> {
       if (DoPandingListData.settings.success == "1") {
         setState(() {
           isLoading = false;
+          _checkboxStates = List<bool>.filled(DoPandingListData.data.length, false);
           // DoPandingListData.data.sort((a, b) {
           //   int stockA = int.tryParse(a["Stock"]) ?? 0;
           //   int stockB = int.tryParse(b["Stock"]) ?? 0;

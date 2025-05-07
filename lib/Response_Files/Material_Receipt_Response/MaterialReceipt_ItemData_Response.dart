@@ -59,6 +59,7 @@ class Datum {
   String qcUrnNo;
   String originalUrnNo;
   String Fabrication_Contractor_Code;
+  var SR_No;
 
   Datum({
     required this.index,
@@ -91,6 +92,7 @@ class Datum {
     required this.qcUrnNo,
     required this.originalUrnNo,
     required this.Fabrication_Contractor_Code,
+    required this.SR_No,
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
@@ -124,6 +126,7 @@ class Datum {
     qcUrnNo: json["QC_URN_No"],
     originalUrnNo: json["Original_URN_No"],
     Fabrication_Contractor_Code: json["Fabrication_Contractor_Code"],
+    SR_No: json["SR_No"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -157,6 +160,7 @@ class Datum {
     "QC_URN_No": qcUrnNo,
     "Original_URN_No": originalUrnNo,
     "Fabrication_Contractor_Code": Fabrication_Contractor_Code,
+    "SR_No": SR_No,
   };
 }
 

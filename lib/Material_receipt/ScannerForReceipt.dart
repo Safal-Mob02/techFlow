@@ -17,6 +17,7 @@ import '../Material_Issue/Material_Issue_ItemList.dart';
 import '../Response_Files/IssueResponse/add_To_pending_URN_Response.dart';
 import '../Utils/constants.dart';
 import '../Utils/sharedpreeferences_utils.dart';
+import 'Material_Receipt_EntryList.dart';
 import 'Material_Receipt_ItemList.dart';
 
 
@@ -353,8 +354,10 @@ class _ScannerForReceiptState extends State<ScannerForReceipt> {
       log(jsonData.toString());
       var map = Map<String, dynamic>.from(jsonData);
       if (jsonData['settings']['success']=="0"){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Material_Receipt_EntryList(),));
+
         Fluttertoast.showToast(
-          msg: jsonData['settings']["message"]??"NO Data Available",
+          msg: jsonData['settings']["message"]??"Invalid Data",
           textColor: Colors.white,
           backgroundColor: Colors.red,
           gravity: ToastGravity.CENTER,
