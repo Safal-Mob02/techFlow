@@ -45,6 +45,7 @@ class _Material_Recepit_ItemDetails_FormState
   TextEditingController StockController = TextEditingController();
   TextEditingController RemarksController = TextEditingController();
   TextEditingController  _searchController = TextEditingController();
+  TextEditingController  _searchController1 = TextEditingController();
   TextEditingController  FebricationContractorNameController = TextEditingController();
   TextEditingController  WeldingContractorNameController = TextEditingController();
   TextEditingController PaintContractorNameController = TextEditingController();
@@ -286,7 +287,7 @@ class _Material_Recepit_ItemDetails_FormState
                                             controller: _searchController,
                                             onChanged: (value) {
                                               setState(() {
-                                                GetSizeList(value);
+                                                //GetSizeList(value);
                                                 //isLoading = true;
                                                 GetLocationList(value).then((data) {
                                                   setState(() {
@@ -1649,7 +1650,7 @@ class _Material_Recepit_ItemDetails_FormState
                                               mainAxisSize: MainAxisSize.max,
                                               children: [
                                                 CupertinoSearchTextField(
-                                                  controller: _searchController,
+                                                  controller: _searchController1,
                                                   onChanged: (value) {
                                                     setState(() {
                                                       GetSizeList(value);
@@ -1691,6 +1692,7 @@ class _Material_Recepit_ItemDetails_FormState
                                                           setState(() {
                                                             SizeController.text=SizeData['Data'][index]['Select_Value'].toString();
                                                             SizeCode=SizeData['Data'][index]['Select_Value_Code'].toString();
+                                                            _searchController.clear();
                                                             GetStructureList("");
                                                             Navigator.pop(
                                                                 context);
@@ -2971,6 +2973,7 @@ class _Material_Recepit_ItemDetails_FormState
                                                           SelectedStock=LocationResponseData.data[index].stock.toString();
                                                           StockController.text=LocationResponseData.data[index].stock.toString();
                                                           LocationCode = LocationResponseData.data[index].selectValueCode;
+                                                          _searchController.clear();
                                                           Navigator.pop(
                                                               context);
                                                           log("Location ID $LocationCode");
@@ -4283,6 +4286,8 @@ class _Material_Recepit_ItemDetails_FormState
   }
 
   Future<Map<String, dynamic>>  GetLocationList(SearchText) async {
+
+
     Map data = {
       "user_id": urCode,
       "CO_CODE":coCode,

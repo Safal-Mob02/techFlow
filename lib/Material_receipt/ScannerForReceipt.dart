@@ -353,15 +353,34 @@ class _ScannerForReceiptState extends State<ScannerForReceipt> {
       var jsonData = json.decode(response.body);
       log(jsonData.toString());
       var map = Map<String, dynamic>.from(jsonData);
-      if (jsonData['settings']['success']=="0"){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Material_Receipt_EntryList(),));
+      if (jsonData['settings']['success']=='0'){
 
-        Fluttertoast.showToast(
-          msg: jsonData['settings']["message"]??"Invalid Data",
-          textColor: Colors.white,
-          backgroundColor: Colors.red,
-          gravity: ToastGravity.CENTER,
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Message"),
+              content: Text(jsonData['settings']["message"] ?? "Invalid Data"),
+              actions: [
+                TextButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Material_Receipt_EntryList(),));// Close the dialog
+                  },
+                ),
+              ],
+            );
+          },
         );
+
+        // Fluttertoast.showToast(
+        //   msg: jsonData['settings']["message"]/*??"Invalid Data"*/,
+        //   textColor: Colors.white,
+        //   backgroundColor: Colors.red,
+        //   gravity: ToastGravity.CENTER,
+        // );
+
+
       }
       var DoPandingListData = AddToPendingUrnResponse.fromJson(map);
       if (DoPandingListData.settings.success == "1") {
@@ -381,11 +400,22 @@ class _ScannerForReceiptState extends State<ScannerForReceipt> {
         setState(() {
           isLoading = false;
         });
-        Fluttertoast.showToast(
-          msg: DoPandingListData.settings.message??"NO Data Available",
-          textColor: Colors.white,
-          backgroundColor: Colors.red,
-          gravity: ToastGravity.CENTER,
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Message"),
+              content: Text(DoPandingListData.settings.message ?? "Invalid Data"),
+              actions: [
+                TextButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Material_Receipt_EntryList(),));// Close the dialog
+                  },
+                ),
+              ],
+            );
+          },
         );
       }
     } else {

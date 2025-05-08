@@ -15,10 +15,12 @@ import 'package:techflowmobileapp/Utils/Tools.dart';
 
 import '../Material_Issue/Material_Issue_ItemList.dart';
 import '../ProductionQC/Producion_QC_Form_TAB_Page.dart';
+import '../ProductionQC/ProductionQC_EntryList.dart';
 import '../Response_Files/IssueResponse/add_To_pending_URN_Response.dart';
 import '../Response_Files/PurchaseQC_Response/AddToPendingQCResponse.dart';
 import '../Utils/constants.dart';
 import '../Utils/sharedpreeferences_utils.dart';
+import 'PurchaseQC_EntryList.dart';
 import 'Purchase_QC_Form_TAB_Page.dart';
 
 
@@ -430,12 +432,30 @@ class _ScannerForPurchaseQCState extends State<ScannerForPurchaseQC> {
       log(jsonData.toString());
       var map = Map<String, dynamic>.from(jsonData);
       if (jsonData['settings']['success']=="0"){
-        Fluttertoast.showToast(
-          msg: jsonData['settings']["message"]??"NO Data Available",
-          textColor: Colors.white,
-          backgroundColor: Colors.red,
-          gravity: ToastGravity.CENTER,
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Message"),
+              content: Text(jsonData['settings']["message"] ?? "Invalid Data"),
+              actions: [
+                TextButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => PurchaseQC_EntryList(),));// Close the dialog
+                  },
+                ),
+              ],
+            );
+          },
         );
+        // Fluttertoast.showToast(
+        //   msg: jsonData['settings']["message"]??"NO Data Available",
+        //   textColor: Colors.white,
+        //   backgroundColor: Colors.red,
+        //   gravity: ToastGravity.CENTER,
+        // );
       }
       var DoPandingListData = AddToPendingQcResponse.fromJson(map);
       if (DoPandingListData.settings.success == "1") {
@@ -448,18 +468,29 @@ class _ScannerForPurchaseQCState extends State<ScannerForPurchaseQC> {
           log(Urn);
           controller!.stopCamera();
           if(Urn.isNotEmpty){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Producion_QC_Form_TAB_Page(Urn: Urn,)));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ProductionQC_EntryList()));
           }
         });
       } else {
         setState(() {
           isLoading = false;
         });
-        Fluttertoast.showToast(
-          msg: DoPandingListData.settings.message??"NO Data Available",
-          textColor: Colors.white,
-          backgroundColor: Colors.red,
-          gravity: ToastGravity.CENTER,
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Message"),
+              content: Text(DoPandingListData.settings.message ?? "Invalid Data"),
+              actions: [
+                TextButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProductionQC_EntryList(),));// Close the dialog
+                  },
+                ),
+              ],
+            );
+          },
         );
       }
     } else {
