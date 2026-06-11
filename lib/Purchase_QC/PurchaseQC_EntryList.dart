@@ -1863,11 +1863,29 @@ class _PurchaseQC_EntryListState extends State<PurchaseQC_EntryList> {
         setState(() {
           isLoading = false;
         });
-        Fluttertoast.showToast(
-          msg: DoPandingListData.settings.message??"NO Data Available",
-          textColor: Colors.white,
-          backgroundColor: Colors.red,
-          gravity: ToastGravity.CENTER,
+        // Fluttertoast.showToast(
+        //   msg: DoPandingListData.settings.message??"NO Data Available",
+        //   textColor: Colors.white,
+        //   backgroundColor: Colors.red,
+        //   gravity: ToastGravity.CENTER,
+        // );
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Message"),
+              content: Text(DoPandingListData.settings.message ?? "Invalid Data"),
+              actions: [
+                TextButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    // Navigator.push(context, MaterialPageRoute(builder: (context) => Material_Issue_ListScreen(),));// Close the dialog
+                  },
+                ),
+              ],
+            );
+          },
         );
       }
     } else {

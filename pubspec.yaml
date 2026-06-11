@@ -39,14 +39,13 @@ dependencies:
   shared_preferences: ^2.2.2
   fluttertoast:
   lottie: ^2.7.0
-  font_awesome_flutter: ^10.6.0
+  font_awesome_flutter: ^10.5.0
   awesome_dialog: ^3.1.0
   intl:
   image_picker: ^0.8.5+3
   marquee: ^2.2.3
   image_cropper: ^3.0.0
   permission_handler:
-
 
 
 dev_dependencies:

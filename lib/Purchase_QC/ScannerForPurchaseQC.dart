@@ -443,6 +443,8 @@ class _ScannerForPurchaseQCState extends State<ScannerForPurchaseQC> {
                 TextButton(
                   child: Text("OK"),
                   onPressed: () {
+
+
                     Navigator.push(context, MaterialPageRoute(builder: (context) => PurchaseQC_EntryList(),));// Close the dialog
                   },
                 ),
@@ -467,8 +469,10 @@ class _ScannerForPurchaseQCState extends State<ScannerForPurchaseQC> {
           String Urn =DoPandingListData.data[0].urnNo.toString();
           log(Urn);
           controller!.stopCamera();
+
           if(Urn.isNotEmpty){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ProductionQC_EntryList()));
+
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Producion_QC_Form_TAB_Page(Urn: Urn,)));
           }
         });
       } else {

@@ -53,7 +53,6 @@ class _ScannerForReceiptState extends State<ScannerForReceipt> {
 
   var DoPandingListData;
 
-
   @override
   void reassemble() {
     super.reassemble();
@@ -157,6 +156,7 @@ class _ScannerForReceiptState extends State<ScannerForReceipt> {
     required Widget icon,
     required String label,
   }) {
+
     return Flexible(
       child: Container(
         margin: const EdgeInsets.all(8),
@@ -175,7 +175,9 @@ class _ScannerForReceiptState extends State<ScannerForReceipt> {
         ),
       ),
     );
+
   }
+
   Widget _buildQrView(BuildContext context) {
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
         MediaQuery.of(context).size.height < 400)
@@ -318,6 +320,7 @@ class _ScannerForReceiptState extends State<ScannerForReceipt> {
       return "";
     }
   }
+
   String Length(String input) {
     // Define the pattern to find the Roll No
     RegExp regex = RegExp(r'Length. :(\w+)');
@@ -334,6 +337,7 @@ class _ScannerForReceiptState extends State<ScannerForReceipt> {
       return "";
     }
   }
+
   Future<void> GetURN_FORP(BarcodeRes) async {
     setState(() {
       isLoading = true;

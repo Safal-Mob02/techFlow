@@ -60,9 +60,14 @@ class _Material_Recepit_ItemDetails_FormState
   TextEditingController SizeController = TextEditingController();
   TextEditingController StructureController = TextEditingController();
   TextEditingController locationController = TextEditingController();
+  TextEditingController WelderIDController = TextEditingController();
+  TextEditingController ColorCodeController = TextEditingController();
+  TextEditingController DFTController = TextEditingController();
   var FebricationContractorCode;
   var SizeCode;
   var StructureCode;
+  var ColorCode;
+  var DFTCode;
   var WeldingContractorCode="";
   var PaintContractorCode;
   var ItemNameCode;
@@ -90,11 +95,16 @@ class _Material_Recepit_ItemDetails_FormState
 
   var SizeData;
   var locationData;
+  var WelderIDData;
   var StructureData;
+  var ColorCodeData;
+  var DFTData;
 
   var ContractorNameData;
 
   var todayDate;
+
+  var WelderID;
 
 
   @override
@@ -123,10 +133,14 @@ class _Material_Recepit_ItemDetails_FormState
       SizeController.text=widget.FormData.size.toString();
       StructureController.text=widget.FormData.structure.toString();
       locationController.text=widget.FormData.location.toString();
+      WelderIDController.text=widget.FormData.Welder_ID.toString();
+      ColorCodeController.text=widget.FormData.Colour_Code.toString();
+      DFTController.text=widget.FormData.DFT_ID.toString();
 
 
       log("Unit ID${widget.FormData.unitCode}");
       _calculateAmount();
+
 
       // RateController.addListener(_calculateAmount);
       // processTimeController.addListener(_calculateAmount);
@@ -155,6 +169,10 @@ class _Material_Recepit_ItemDetails_FormState
       GetContractorName("");
       GetSizeList("");
       GetLocationList("");
+      GetWelderList("");
+      GetColorCodeList("");
+      GetDFTList("");
+      GetStructureList("");
 
       AttachmentList();
     }));
@@ -1601,18 +1619,156 @@ class _Material_Recepit_ItemDetails_FormState
                         SizedBox(
                           height: 10,
                         ),
+                        // TextFormField(
+                        //   controller: weldingRateController,
+                        //   // initialValue: "${widget.FormData.soNo}",
+                        //   style: TextStyle(color: Colors.black),
+                        //   readOnly: false,
+                        //   keyboardType: TextInputType.emailAddress,
+                        //   decoration: inputDecoration(
+                        //       postfixIcon: Icon(Icons.edit),
+                        //       focusedBorder: myfocusborder(),
+                        //       enabledBorder: myinputborder(),
+                        //       hintText: '',
+                        //       labelText: 'Welding Rate'),
+                        //   validator: (value) {
+                        //     if (value == null || value.isEmpty) {
+                        //       return 'Please fill this field';
+                        //     }
+                        //     return null;
+                        //   },
+                        // ),
+                        // SizedBox(
+                        //   height: 10,
+                        // ),
                         TextFormField(
-                          controller: weldingRateController,
-                          // initialValue: "${widget.FormData.soNo}",
-                          style: TextStyle(color: Colors.black),
-                          readOnly: false,
+                          style: const TextStyle(color: Colors.black),
+                          controller: WelderIDController,
+                          // initialValue: "${widget.FormData.itemName}",
+                          readOnly: true,
                           keyboardType: TextInputType.emailAddress,
+                          onTap: () {
+                            setState(() {});
+                            showDialog(
+                              context: context,
+                              barrierDismissible: true,
+                              builder: (BuildContext context) {
+                                return StatefulBuilder(
+                                    builder: (context, setState) {
+                                      return WelderIDData != null
+                                          ? AlertDialog(
+                                        title: const Text('Select WelderID'),
+                                        content: Container(
+                                          width: double.maxFinite,
+                                          //  constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+                                          child: SingleChildScrollView(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                CupertinoSearchTextField(
+                                                  controller: _searchController,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      GetWelderList(value);
+                                                      //isLoading = true;
+                                                      GetWelderList(value).then((data) {
+                                                        setState(() {
+                                                          WelderIDData = data;
+                                                          //log(data.data.toString());
+                                                          isLoading = false;
+                                                        });
+                                                      }).catchError((error) {
+                                                        setState(() {
+                                                          isLoading = false;
+                                                          // Handle error if necessary
+                                                        });
+                                                      });
+                                                    });
+                                                  },
+                                                ),
+                                                if (isLoading) Center(
+                                                  child: Lottie.asset(
+                                                    'Assets/loading.json',
+                                                    width: 100,
+                                                    height: 100,
+                                                    fit: BoxFit.fill,
+                                                  ),
+                                                ) else Container(
+                                                  height: MediaQuery.of(context).size.height,
+                                                  child: ListView.builder(
+                                                    itemCount:
+                                                    WelderIDData
+                                                    ['message'].length,
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                        int index) {
+                                                      //final item = filteredItems[index];
+                                                      return InkWell(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            WelderIDController.text=WelderIDData['message'][index]['Welder_Name'].toString();
+                                                            WelderID=WelderIDData['message'][index]['Welder_Name'].toString();
+
+
+                                                            Navigator.pop(
+                                                                context);
+                                                          });
+
+                                                        },
+                                                        child: ListTile(
+                                                          title: Text(
+                                                            "${WelderIDData['message'][index]['Welder_Name'].toString()}",
+                                                            style: const TextStyle(
+                                                                fontWeight:
+                                                                FontWeight
+                                                                    .w500,
+                                                                fontSize: 15,
+                                                                color: Colors
+                                                                    .black),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        // actions: <Widget>[
+                                        //   TextButton(
+                                        //     onPressed: () {
+                                        //       Navigator.of(context).pop();
+                                        //     },
+                                        //     child: Text('Cancel'),
+                                        //   ),
+                                        //   TextButton(
+                                        //     onPressed: () {
+                                        //       // Do something with the selected items
+                                        //       print('Selected Items: $selectedItem');
+                                        //       // Close the dialog
+                                        //       Navigator.of(context).pop();
+                                        //     },
+                                        //     child: Text('Done'),
+                                        //   ),
+                                        // ],
+                                      )
+                                          : const AlertDialog(
+                                        title: Text('No Data Available'),
+                                      );
+                                      ;
+                                    });
+                              },
+                            );
+                          },
                           decoration: inputDecoration(
-                              postfixIcon: Icon(Icons.edit),
                               focusedBorder: myfocusborder(),
                               enabledBorder: myinputborder(),
+                              postfixIcon: const Icon(Icons.arrow_drop_down,size: 30,),
                               hintText: '',
-                              labelText: 'Welding Rate'),
+                              labelText: 'WelderID'),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please fill this field';
@@ -1761,138 +1917,145 @@ class _Material_Recepit_ItemDetails_FormState
                         SizedBox(
                           height: 10,
                         ),
-                        TextFormField(
-                          style: const TextStyle(color: Colors.black),
-                          controller: StructureController,
-                          // initialValue: "${widget.FormData.itemName}",
-                          readOnly: true,
-                          keyboardType: TextInputType.emailAddress,
-                          onTap: () {
-                            setState(() {});
-                            showDialog(
-                              context: context,
-                              barrierDismissible: true,
-                              builder: (BuildContext context) {
-                                return StatefulBuilder(
-                                    builder: (context, setState) {
-                                      return StructureData != null
-                                          ? AlertDialog(
-                                        title: const Text('Select Size'),
-                                        content: Container(
-                                          width: double.maxFinite,
-                                          //  constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
-                                          child: SingleChildScrollView(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                CupertinoSearchTextField(
-                                                  controller: _searchController,
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      GetStructureList(value);
-                                                      //isLoading = true;
-                                                      GetStructureList(value).then((data) {
-                                                        setState(() {
-                                                          StructureData = data;
-                                                          //log(data.data.toString());
-                                                          isLoading = false;
-                                                        });
-                                                      }).catchError((error) {
-                                                        setState(() {
-                                                          isLoading = false;
-                                                          // Handle error if necessary
+                        Visibility(
+                          visible: SizeController.text!=""&&SizeController.text!=null,
+                          child: TextFormField(
+                            style: const TextStyle(color: Colors.black),
+                            controller: StructureController,
+                            // initialValue: "${widget.FormData.itemName}",
+                            readOnly: true,
+                            keyboardType: TextInputType.emailAddress,
+                            onTap: () {
+                              setState(() {});
+                              showDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                builder: (BuildContext context) {
+                                  return StatefulBuilder(
+                                      builder: (context, setState) {
+                                        return StructureData != null
+                                            ? AlertDialog(
+                                          title: const Text('Select Size'),
+                                          content: Container(
+                                            width: double.maxFinite,
+                                            //  constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+                                            child: SingleChildScrollView(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  CupertinoSearchTextField(
+                                                    controller: _searchController,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        GetStructureList(value);
+                                                        //isLoading = true;
+                                                        GetStructureList(value).then((data) {
+                                                          setState(() {
+                                                            StructureData = data;
+                                                            //log(data.data.toString());
+                                                            isLoading = false;
+                                                          });
+                                                        }).catchError((error) {
+                                                          setState(() {
+                                                            isLoading = false;
+                                                            // Handle error if necessary
+                                                          });
                                                         });
                                                       });
-                                                    });
-                                                  },
-                                                ),
-                                                if (isLoading) Center(
-                                                  child: Lottie.asset(
-                                                    'Assets/loading.json',
-                                                    width: 100,
-                                                    height: 100,
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                ) else Container(
-                                                  height: MediaQuery.of(context).size.height,
-                                                  child: ListView.builder(
-                                                    itemCount:
-                                                    StructureData
-                                                    ['Data'].length,
-                                                    itemBuilder:
-                                                        (BuildContext context,
-                                                        int index) {
-                                                      //final item = filteredItems[index];
-                                                      return InkWell(
-                                                        onTap: () {
-                                                          setState(() {
-                                                            StructureController.text=StructureData['Data'][index]['Select_Value'].toString();
-                                                            StructureCode=StructureData['Data'][index]['Select_Value_Code'].toString();
-                                                            Navigator.pop(
-                                                                context);
-                                                          });
-
-                                                        },
-                                                        child: ListTile(
-                                                          title: Text(
-                                                            "${StructureData['Data'][index]['Select_Value'].toString()}",
-                                                            style: const TextStyle(
-                                                                fontWeight:
-                                                                FontWeight
-                                                                    .w500,
-                                                                fontSize: 15,
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
-                                                        ),
-                                                      );
                                                     },
                                                   ),
-                                                ),
-                                              ],
+                                                  if (isLoading) Center(
+                                                    child: Lottie.asset(
+                                                      'Assets/loading.json',
+                                                      width: 100,
+                                                      height: 100,
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                                  ) else Container(
+                                                    height: MediaQuery.of(context).size.height,
+                                                    child: ListView.builder(
+                                                      itemCount:
+                                                      StructureData
+                                                      ['Data'].length,
+                                                      itemBuilder:
+                                                          (BuildContext context,
+                                                          int index) {
+                                                        //final item = filteredItems[index];
+                                                        return InkWell(
+                                                          onTap: () {
+                                                            setState(() {
+                                                              StructureController.text=StructureData['Data'][index]['Select_Value'].toString();
+                                                              StructureCode=StructureData['Data'][index]['Select_Value_Code'].toString();
+                                                              if(SizeController.text.isNotEmpty && StructureController.text.isNotEmpty){
+                                                                GetWeldingRate();
+                                                              }
+
+                                                              Navigator.pop(
+                                                                  context);
+                                                            });
+
+                                                          },
+                                                          child: ListTile(
+                                                            title: Text(
+                                                              "${StructureData['Data'][index]['Select_Value'].toString()}",
+                                                              style: const TextStyle(
+                                                                  fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                                  fontSize: 15,
+                                                                  color: Colors
+                                                                      .black),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        // actions: <Widget>[
-                                        //   TextButton(
-                                        //     onPressed: () {
-                                        //       Navigator.of(context).pop();
-                                        //     },
-                                        //     child: Text('Cancel'),
-                                        //   ),
-                                        //   TextButton(
-                                        //     onPressed: () {
-                                        //       // Do something with the selected items
-                                        //       print('Selected Items: $selectedItem');
-                                        //       // Close the dialog
-                                        //       Navigator.of(context).pop();
-                                        //     },
-                                        //     child: Text('Done'),
-                                        //   ),
-                                        // ],
-                                      )
-                                          : const AlertDialog(
-                                        title: Text('No Data Available'),
-                                      );
-                                      ;
-                                    });
-                              },
-                            );
-                          },
-                          decoration: inputDecoration(
-                              focusedBorder: myfocusborder(),
-                              enabledBorder: myinputborder(),
-                              postfixIcon: const Icon(Icons.arrow_drop_down,size: 30,),
-                              hintText: '',
-                              labelText: 'Structure'),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please fill this field';
-                            }
-                            return null;
-                          },
+                                          // actions: <Widget>[
+                                          //   TextButton(
+                                          //     onPressed: () {
+                                          //       Navigator.of(context).pop();
+                                          //     },
+                                          //     child: Text('Cancel'),
+                                          //   ),
+                                          //   TextButton(
+                                          //     onPressed: () {
+                                          //       // Do something with the selected items
+                                          //       print('Selected Items: $selectedItem');
+                                          //       // Close the dialog
+                                          //       Navigator.of(context).pop();
+                                          //     },
+                                          //     child: Text('Done'),
+                                          //   ),
+                                          // ],
+                                        )
+                                            : const AlertDialog(
+                                          title: Text('No Data Available'),
+                                        );
+                                        ;
+                                      });
+                                },
+                              );
+                            },
+                            decoration: inputDecoration(
+                                focusedBorder: myfocusborder(),
+                                enabledBorder: myinputborder(),
+                                postfixIcon: const Icon(Icons.arrow_drop_down,size: 30,),
+                                hintText: '',
+                                labelText: 'Structure'),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please fill this field';
+                              }
+                              return null;
+                            },
+                          ),
                         ),
 
                       ],
@@ -2306,28 +2469,28 @@ class _Material_Recepit_ItemDetails_FormState
                         SizedBox(
                           height: 10,
                         ),
-                        TextFormField(
-                          controller: febricationRateController,
-                          // initialValue: "${widget.FormData.soNo}",
-                          style: TextStyle(color: Colors.black),
-                          readOnly: false,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: inputDecoration(
-                              postfixIcon: Icon(Icons.edit),
-                              focusedBorder: myfocusborder(),
-                              enabledBorder: myinputborder(),
-                              hintText: '',
-                              labelText: 'Fabrication rate/kg'),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please fill this field';
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
+                        // TextFormField(
+                        //   controller: febricationRateController,
+                        //   // initialValue: "${widget.FormData.soNo}",
+                        //   style: TextStyle(color: Colors.black),
+                        //   readOnly: false,
+                        //   keyboardType: TextInputType.emailAddress,
+                        //   decoration: inputDecoration(
+                        //       postfixIcon: Icon(Icons.edit),
+                        //       focusedBorder: myfocusborder(),
+                        //       enabledBorder: myinputborder(),
+                        //       hintText: '',
+                        //       labelText: 'Fabrication rate/kg'),
+                        //   validator: (value) {
+                        //     if (value == null || value.isEmpty) {
+                        //       return 'Please fill this field';
+                        //     }
+                        //     return null;
+                        //   },
+                        // ),
+                        // SizedBox(
+                        //   height: 10,
+                        // ),
                         TextFormField(
                           style: TextStyle(color: Colors.grey),
                           controller: DrgWeightController,
@@ -2509,9 +2672,155 @@ class _Material_Recepit_ItemDetails_FormState
                         SizedBox(
                           height: 10,
                         ),
+                        Visibility(
+                          visible: SizeController.text!=""&&SizeController.text!=null,
+                          child: TextFormField(
+                            style: const TextStyle(color: Colors.black),
+                            controller: StructureController,
+                            // initialValue: "${widget.FormData.itemName}",
+                            readOnly: true,
+                            keyboardType: TextInputType.emailAddress,
+                            onTap: () {
+                              setState(() {});
+                              showDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                builder: (BuildContext context) {
+                                  return StatefulBuilder(
+                                      builder: (context, setState) {
+                                        return StructureData != null
+                                            ? AlertDialog(
+                                          title: const Text('Select Size'),
+                                          content: Container(
+                                            width: double.maxFinite,
+                                            //  constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+                                            child: SingleChildScrollView(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  CupertinoSearchTextField(
+                                                    controller: _searchController,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        GetStructureList(value);
+                                                        //isLoading = true;
+                                                        GetStructureList(value).then((data) {
+                                                          setState(() {
+                                                            StructureData = data;
+                                                            //log(data.data.toString());
+                                                            isLoading = false;
+
+                                                          });
+                                                        }).catchError((error) {
+                                                          setState(() {
+                                                            isLoading = false;
+                                                            // Handle error if necessary
+                                                          });
+                                                        });
+                                                      });
+                                                    },
+                                                  ),
+                                                  if (isLoading) Center(
+                                                    child: Lottie.asset(
+                                                      'Assets/loading.json',
+                                                      width: 100,
+                                                      height: 100,
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                                  ) else Container(
+                                                    height: MediaQuery.of(context).size.height,
+                                                    child: ListView.builder(
+                                                      itemCount:
+                                                      StructureData
+                                                      ['Data'].length,
+                                                      itemBuilder:
+                                                          (BuildContext context,
+                                                          int index) {
+                                                        //final item = filteredItems[index];
+                                                        return InkWell(
+                                                          onTap: () {
+                                                            setState(() {
+                                                              StructureController.text=StructureData['Data'][index]['Select_Value'].toString();
+                                                              StructureCode=StructureData['Data'][index]['Select_Value_Code'].toString();
+                                                              GetContractorRate();
+
+                                                              // if(SizeController.text.isNotEmpty && StructureController.text.isNotEmpty){
+                                                              //   GetWeldingRate();
+                                                              // }
+
+                                                              Navigator.pop(
+                                                                  context);
+                                                            });
+
+                                                          },
+                                                          child: ListTile(
+                                                            title: Text(
+                                                              "${StructureData['Data'][index]['Select_Value'].toString()}",
+                                                              style: const TextStyle(
+                                                                  fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                                  fontSize: 15,
+                                                                  color: Colors
+                                                                      .black),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          // actions: <Widget>[
+                                          //   TextButton(
+                                          //     onPressed: () {
+                                          //       Navigator.of(context).pop();
+                                          //     },
+                                          //     child: Text('Cancel'),
+                                          //   ),
+                                          //   TextButton(
+                                          //     onPressed: () {
+                                          //       // Do something with the selected items
+                                          //       print('Selected Items: $selectedItem');
+                                          //       // Close the dialog
+                                          //       Navigator.of(context).pop();
+                                          //     },
+                                          //     child: Text('Done'),
+                                          //   ),
+                                          // ],
+                                        )
+                                            : const AlertDialog(
+                                          title: Text('No Data Available'),
+                                        );
+                                        ;
+                                      });
+                                },
+                              );
+                            },
+                            decoration: inputDecoration(
+                                focusedBorder: myfocusborder(),
+                                enabledBorder: myinputborder(),
+                                postfixIcon: const Icon(Icons.arrow_drop_down,size: 30,),
+                                hintText: '',
+                                labelText: 'Structure'),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please fill this field';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
                         TextFormField(
                           style: const TextStyle(color: Colors.black),
-                          controller: StructureController,
+                          controller: ColorCodeController,
                           // initialValue: "${widget.FormData.itemName}",
                           readOnly: true,
                           keyboardType: TextInputType.emailAddress,
@@ -2523,9 +2832,9 @@ class _Material_Recepit_ItemDetails_FormState
                               builder: (BuildContext context) {
                                 return StatefulBuilder(
                                     builder: (context, setState) {
-                                      return StructureData != null
+                                      return ColorCodeData != null
                                           ? AlertDialog(
-                                        title: const Text('Select Size'),
+                                        title: const Text('Select Color Code'),
                                         content: Container(
                                           width: double.maxFinite,
                                           //  constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
@@ -2543,9 +2852,10 @@ class _Material_Recepit_ItemDetails_FormState
                                                       //isLoading = true;
                                                       GetStructureList(value).then((data) {
                                                         setState(() {
-                                                          StructureData = data;
+                                                          ColorCodeData = data;
                                                           //log(data.data.toString());
                                                           isLoading = false;
+
                                                         });
                                                       }).catchError((error) {
                                                         setState(() {
@@ -2556,6 +2866,7 @@ class _Material_Recepit_ItemDetails_FormState
                                                     });
                                                   },
                                                 ),
+
                                                 if (isLoading) Center(
                                                   child: Lottie.asset(
                                                     'Assets/loading.json',
@@ -2567,8 +2878,8 @@ class _Material_Recepit_ItemDetails_FormState
                                                   height: MediaQuery.of(context).size.height,
                                                   child: ListView.builder(
                                                     itemCount:
-                                                    StructureData
-                                                    ['Data'].length,
+                                                    ColorCodeData
+                                                    ['data'].length,
                                                     itemBuilder:
                                                         (BuildContext context,
                                                         int index) {
@@ -2576,17 +2887,16 @@ class _Material_Recepit_ItemDetails_FormState
                                                       return InkWell(
                                                         onTap: () {
                                                           setState(() {
-                                                            StructureController.text=StructureData['Data'][index]['Select_Value'].toString();
-                                                            StructureCode=StructureData['Data'][index]['Select_Value_Code'].toString();
-                                                            GetContractorRate();
+                                                            ColorCodeController.text=ColorCodeData['data'][index]['Select_Value'].toString();
+                                                            ColorCode=ColorCodeData['data'][index]['Select_Value_Code'].toString();
+
                                                             Navigator.pop(
                                                                 context);
                                                           });
-
                                                         },
                                                         child: ListTile(
                                                           title: Text(
-                                                            "${StructureData['Data'][index]['Select_Value'].toString()}",
+                                                            "${ColorCodeData['data'][index]['Select_Value'].toString()}",
                                                             style: const TextStyle(
                                                                 fontWeight:
                                                                 FontWeight
@@ -2635,7 +2945,146 @@ class _Material_Recepit_ItemDetails_FormState
                               enabledBorder: myinputborder(),
                               postfixIcon: const Icon(Icons.arrow_drop_down,size: 30,),
                               hintText: '',
-                              labelText: 'Structure'),
+                              labelText: 'Color Code'),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please fill this field';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        TextFormField(
+                          style: const TextStyle(color: Colors.black),
+                          controller: DFTController,
+                          // initialValue: "${widget.FormData.itemName}",
+                          readOnly: true,
+                          keyboardType: TextInputType.emailAddress,
+                          onTap: () {
+                            setState(() {});
+                            showDialog(
+                              context: context,
+                              barrierDismissible: true,
+                              builder: (BuildContext context) {
+                                return StatefulBuilder(
+                                    builder: (context, setState) {
+                                      return DFTData != null
+                                          ? AlertDialog(
+                                        title: const Text('Select Color Code'),
+                                        content: Container(
+                                          width: double.maxFinite,
+                                          //  constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+                                          child: SingleChildScrollView(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                CupertinoSearchTextField(
+                                                  controller: _searchController,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      GetStructureList(value);
+                                                      //isLoading = true;
+                                                      GetStructureList(value).then((data) {
+                                                        setState(() {
+                                                          DFTData = data;
+                                                          //log(data.data.toString());
+                                                          isLoading = false;
+
+                                                        });
+                                                      }).catchError((error) {
+                                                        setState(() {
+                                                          isLoading = false;
+                                                          // Handle error if necessary
+                                                        });
+                                                      });
+                                                    });
+                                                  },
+                                                ),
+                                                if (isLoading) Center(
+                                                  child: Lottie.asset(
+                                                    'Assets/loading.json',
+                                                    width: 100,
+                                                    height: 100,
+                                                    fit: BoxFit.fill,
+                                                  ),
+                                                ) else Container(
+                                                  height: MediaQuery.of(context).size.height,
+                                                  child: ListView.builder(
+                                                    itemCount:
+                                                    DFTData
+                                                    ['data'].length,
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                        int index) {
+                                                      //final item = filteredItems[index];
+                                                      return InkWell(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            DFTController.text=DFTData['data'][index]['Select_Value'].toString();
+                                                            DFTCode=DFTData['data'][index]['Select_Value_Code'].toString();
+
+
+                                                            Navigator.pop(
+                                                                context);
+                                                          });
+
+                                                        },
+                                                        child: ListTile(
+                                                          title: Text(
+                                                            "${DFTData['data'][index]['Select_Value'].toString()}",
+                                                            style: const TextStyle(
+                                                                fontWeight:
+                                                                FontWeight
+                                                                    .w500,
+                                                                fontSize: 15,
+                                                                color: Colors
+                                                                    .black),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        // actions: <Widget>[
+                                        //   TextButton(
+                                        //     onPressed: () {
+                                        //       Navigator.of(context).pop();
+                                        //     },
+                                        //     child: Text('Cancel'),
+                                        //   ),
+                                        //   TextButton(
+                                        //     onPressed: () {
+                                        //       // Do something with the selected items
+                                        //       print('Selected Items: $selectedItem');
+                                        //       // Close the dialog
+                                        //       Navigator.of(context).pop();
+                                        //     },
+                                        //     child: Text('Done'),
+                                        //   ),
+                                        // ],
+                                      )
+                                          : const AlertDialog(
+                                        title: Text('No Data Available'),
+                                      );
+                                      ;
+                                    });
+                              },
+                            );
+                          },
+                          decoration: inputDecoration(
+                              focusedBorder: myfocusborder(),
+                              enabledBorder: myinputborder(),
+                              postfixIcon: const Icon(Icons.arrow_drop_down,size: 30,),
+                              hintText: '',
+                              labelText: 'DFT'),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please fill this field';
@@ -2782,7 +3231,6 @@ class _Material_Recepit_ItemDetails_FormState
                             return null;
                           },
                         ),
-
 
                       ],
                     ),
@@ -4341,6 +4789,119 @@ class _Material_Recepit_ItemDetails_FormState
     return locationData;
   }
 
+  // Future<Map<String, dynamic>>  GetWelderList(SearchText) async {
+  //   Map data = {
+  //     "UR_CODE": urCode,
+  //     "CO_CODE":coCode,
+  //     "Searchtext":SearchText,
+  //   };
+  //   setState(() {
+  //     isLoading = true;
+  //   });
+  //   final response = await http.post(
+  //     Uri.parse("${clientUrl}MaterialReceipt/Get_Welder_ID_FOR_MobileAPI"),
+  //     body: data,
+  //   );
+  //   log("${clientUrl}MaterialReceipt/Get_Welder_ID_FOR_MobileAPI$data");
+  //   log("=====>${response.body.toString()}");
+  //   setState(() {
+  //     isLoading = false;
+  //   });
+  //   var jsonData;
+  //   if (response.statusCode == 200) {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //     jsonData = json.decode(response.body);
+  //     var map = Map<String, dynamic>.from(jsonData);
+  //     log(map.toString());
+  //
+  //
+  //
+  //     if (map['settings']['success'] == "1") {
+  //       setState(() {
+  //         // locationData = map;
+  //         WelderIDData = map;
+  //       });
+  //
+  //
+  //     } else {
+  //       Fluttertoast.showToast(
+  //           msg: "Data Not Found!",
+  //           textColor: Colors.white,
+  //           backgroundColor: Colors.red[800],
+  //           gravity: ToastGravity.BOTTOM);
+  //     }
+  //   } else {
+  //     Fluttertoast.showToast(
+  //         msg: "Something Wrong Please try again!",
+  //         textColor: Colors.white,
+  //         backgroundColor: Colors.red[800],
+  //         gravity: ToastGravity.BOTTOM);
+  //   }
+  //   return locationData;
+  // }
+
+  Future<Map<String, dynamic>> GetWelderList(SearchText) async {
+    // Construct the query string
+    final queryParams = {
+      "UR_CODE": urCode,
+      "CO_CODE":coCode,
+      "Searchtext":SearchText,
+    };
+
+    // Build the full URL with query parameters
+    final uri = Uri.parse("${clientUrl}MaterialReceipt/Get_Welder_ID_FOR_MobileAPI")
+        .replace(queryParameters: queryParams);
+
+    setState(() {
+      isLoading = true;
+    });
+
+    // Make the GET request
+    final response = await http.get(uri);
+
+    log(uri.toString()); // Log the full URL
+    log(response.body.toString());
+
+    setState(() {
+      isLoading = false;
+    });
+
+    var jsonData;
+    if (response.statusCode == 200) {
+      setState(() {
+        isLoading = false;
+      });
+
+      jsonData = json.decode(response.body);
+      var map = Map<String, dynamic>.from(jsonData);
+      log("====>${map.toString()}");
+
+      if (map['settings']['success'] == "1") {
+        setState(() {
+          WelderIDData=map;
+          log("===>${WelderIDData.toString()}");
+        });
+      } else {
+        Fluttertoast.showToast(
+          msg: "Data Not Found!",
+          textColor: Colors.white,
+          backgroundColor: Colors.red[800],
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
+    } else {
+      Fluttertoast.showToast(
+        msg: "Something Wrong Please try again!",
+        textColor: Colors.white,
+        backgroundColor: Colors.red[800],
+        gravity: ToastGravity.BOTTOM,
+      );
+    }
+    return WelderIDData;
+  }
+
   Future<Map<String, dynamic>>  GetStructureList(SearchText) async {
     Map data = {
       "UR_CODE": urCode,
@@ -4382,6 +4943,7 @@ class _Material_Recepit_ItemDetails_FormState
 
       } else {
         GetContractorRate();
+
         Fluttertoast.showToast(
             msg: "Data Not Found!",
             textColor: Colors.white,
@@ -4397,6 +4959,117 @@ class _Material_Recepit_ItemDetails_FormState
     }
     return StructureData;
   }
+
+  Future<Map<String, dynamic>> GetColorCodeList(String searchText) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final uri = Uri.parse(
+      "${clientUrl}MaterialReceipt/Get_Temp_Colorcode_FOR_MobileAPI",
+    ).replace(queryParameters: {
+      "UR_CODE": urCode,
+      "Select_Valuecode": "",
+      "Searchtext": searchText,
+      "CO_CODE": coCode,
+      // "IT_Code": ItemNameCode,
+      // "Size": SizeController.text.toString(),
+      // "Process_code": processCode,
+    });
+
+    log(uri.toString());
+
+    final response = await http.get(uri);
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      var map = Map<String, dynamic>.from(jsonData);
+      log(map.toString());
+
+      if (map['settings']['success'] == "1") {
+        setState(() {
+          ColorCodeData = map;
+        });
+      } else {
+        GetContractorRate();
+        Fluttertoast.showToast(
+          msg: "Data Not Found!",
+          textColor: Colors.white,
+          backgroundColor: Colors.red[800],
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
+      return ColorCodeData;
+    } else {
+      Fluttertoast.showToast(
+        msg: "Something Wrong Please try again!",
+        textColor: Colors.white,
+        backgroundColor: Colors.red[800],
+        gravity: ToastGravity.BOTTOM,
+      );
+      return {};
+    }
+  }
+
+  Future<Map<String, dynamic>> GetDFTList(String searchText) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final uri = Uri.parse(
+      "${clientUrl}MaterialReceipt/Get_Temp_DFT_FOR_MobileAPI",
+    ).replace(queryParameters: {
+      "UR_CODE": urCode,
+      "Select_Valuecode": "",
+      "Searchtext": searchText,
+      "CO_CODE": coCode,
+      // "IT_Code": ItemNameCode,
+      // "Size": SizeController.text.toString(),
+      // "Process_code": processCode,
+    });
+
+    log(uri.toString());
+
+    final response = await http.get(uri);
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      var map = Map<String, dynamic>.from(jsonData);
+      log("Get_Temp_DFT_FOR_MobileAPI====>${map.toString()}");
+
+      if (map['settings']['success'] == "1") {
+        setState(() {
+          DFTData = map;
+        });
+      } else {
+        GetContractorRate();
+        Fluttertoast.showToast(
+          msg: "Data Not Found!",
+          textColor: Colors.white,
+          backgroundColor: Colors.red[800],
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
+      return DFTData;
+    } else {
+      Fluttertoast.showToast(
+        msg: "Something Wrong Please try again!",
+        textColor: Colors.white,
+        backgroundColor: Colors.red[800],
+        gravity: ToastGravity.BOTTOM,
+      );
+      return {};
+    }
+  }
+
 
   Future<Map<String, dynamic>> GetContractorRate() async {
     // Construct the query string
@@ -4460,6 +5133,68 @@ class _Material_Recepit_ItemDetails_FormState
     return StructureData;
   }
 
+  Future<Map<String, dynamic>> GetWeldingRate() async {
+    // Construct the query string
+    final queryParams = {
+      "UR_CODE": urCode,
+      "CO_CODE": coCode,
+      "IT_Code": ItemNameCode,
+      "Size": SizeController.text.toString(),
+      "Structure_ID": StructureController.text.toString(),
+      "Process_code": processCode,
+    };
+
+    // Build the full URL with query parameters
+    final uri = Uri.parse("${clientUrl}MaterialReceipt/Get_Welding_Rate")
+        .replace(queryParameters: queryParams);
+
+    setState(() {
+      isLoading = true;
+    });
+
+    // Make the GET request
+    final response = await http.get(uri);
+
+    log(uri.toString()); // Log the full URL
+    log(response.body.toString());
+
+    setState(() {
+      isLoading = false;
+    });
+
+    var jsonData;
+    if (response.statusCode == 200) {
+      setState(() {
+        isLoading = false;
+      });
+
+      jsonData = json.decode(response.body);
+      var map = Map<String, dynamic>.from(jsonData);
+      log(map.toString());
+
+      if (map['settings']['success'] == "1") {
+        setState(() {
+          weldingRateController.text=map['message'][0]['Rate'].toString();
+        });
+      } else {
+        Fluttertoast.showToast(
+          msg: "Data Not Found!",
+          textColor: Colors.white,
+          backgroundColor: Colors.red[800],
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
+    } else {
+      Fluttertoast.showToast(
+        msg: "Something Wrong Please try again!",
+        textColor: Colors.white,
+        backgroundColor: Colors.red[800],
+        gravity: ToastGravity.BOTTOM,
+      );
+    }
+    return StructureData;
+  }
+
 
   Future<void> SaveData(List images) async {
     setState(() {
@@ -4492,6 +5227,9 @@ class _Material_Recepit_ItemDetails_FormState
       request.fields['Structure'] = StructureController.text.toString();
       request.fields['Amount'] = amountController.text.toString();
       request.fields['Quantity'] = QuantityController.text.toString();
+      request.fields['Welder_ID'] = WelderIDController.text.toString();
+      request.fields['Colour_Code'] = ColorCodeController.text.toString();
+      request.fields['DFT_ID'] = DFTController.text.toString();
 
       // Log the form data (payload)
       log("Form Data Payload: ${clientUrl}MaterialReceipt/UpdateMaterialReceiptItemDetails${request.fields}");

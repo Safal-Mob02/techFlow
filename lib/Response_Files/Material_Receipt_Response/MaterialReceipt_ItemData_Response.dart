@@ -60,6 +60,9 @@ class Datum {
   String originalUrnNo;
   String Fabrication_Contractor_Code;
   var SR_No;
+  var Welder_ID;
+  var Colour_Code;
+  var DFT_ID;
 
   Datum({
     required this.index,
@@ -93,6 +96,9 @@ class Datum {
     required this.originalUrnNo,
     required this.Fabrication_Contractor_Code,
     required this.SR_No,
+    required this.Welder_ID,
+    required this.Colour_Code,
+    required this.DFT_ID,
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
@@ -110,7 +116,7 @@ class Datum {
     remarks: json["Remarks"],
     assemblyWeight: json["Assembly Weight"],
     fabricationContractor: json["Fabrication Contractor"],
-    fabricationRateKg: json["Fabrication Rate / Kg"],
+    fabricationRateKg: json["Fabrication Rate / Kg"].toString(),
     weldingContractor: json["Welding Contractor"],
     weldingRate: json["Welding Rate"],
     paintContractor: json["Paint Contractor"],
@@ -127,6 +133,9 @@ class Datum {
     originalUrnNo: json["Original_URN_No"],
     Fabrication_Contractor_Code: json["Fabrication_Contractor_Code"],
     SR_No: json["SR_No"],
+    Welder_ID: json["Welder_ID"],
+    Colour_Code: json["Colour_Code"],
+    DFT_ID: json["DFT_ID"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -161,6 +170,9 @@ class Datum {
     "Original_URN_No": originalUrnNo,
     "Fabrication_Contractor_Code": Fabrication_Contractor_Code,
     "SR_No": SR_No,
+    "Welder_ID": Welder_ID,
+    "Colour_Code": Colour_Code,
+    "DFT_ID": DFT_ID,
   };
 }
 

@@ -14,6 +14,7 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:techflowmobileapp/Utils/Tools.dart';
 
 import '../Material_Issue/Material_Issue_ItemList.dart';
+import '../Material_Issue/Material_Issue_ListScreen.dart';
 import '../Response_Files/IssueResponse/add_To_pending_URN_Response.dart';
 import '../Utils/constants.dart';
 import '../Utils/sharedpreeferences_utils.dart';
@@ -369,11 +370,29 @@ class _Scanner_IssueState extends State<Scanner_Issue> {
         setState(() {
           isLoading = false;
         });
-        Fluttertoast.showToast(
-          msg: DoPandingListData.settings.message??"NO Data Available",
-          textColor: Colors.white,
-          backgroundColor: Colors.red,
-          gravity: ToastGravity.CENTER,
+        // Fluttertoast.showToast(
+        //   msg: DoPandingListData.settings.message??"NO Data Available",
+        //   textColor: Colors.white,
+        //   backgroundColor: Colors.red,
+        //   gravity: ToastGravity.CENTER,
+        // );
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Message"),
+              content: Text(DoPandingListData.settings.message ?? "Invalid Data"),
+              actions: [
+                TextButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Material_Issue_ListScreen(),));// Close the dialog
+                  },
+                ),
+              ],
+            );
+          },
         );
       }
     } else {
@@ -427,11 +446,28 @@ class _Scanner_IssueState extends State<Scanner_Issue> {
         setState(() {
           isLoading = false;
         });
-        Fluttertoast.showToast(
-          msg: "${DoPandingListData.settings.message}",
-          textColor: Colors.white,
-          backgroundColor: Colors.red,
-          gravity: ToastGravity.CENTER,
+        // Fluttertoast.showToast(
+        //   msg: "${DoPandingListData.settings.message}",
+        //   textColor: Colors.white,
+        //   backgroundColor: Colors.red,
+        //   gravity: ToastGravity.CENTER,
+        // );
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Message"),
+              content: Text(DoPandingListData.settings.message ?? "Invalid Data"),
+              actions: [
+                TextButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Material_Issue_ListScreen(),));// Close the dialog
+                  },
+                ),
+              ],
+            );
+          },
         );
       }
     } else {

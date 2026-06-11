@@ -35,6 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
       isLoggedIn = value;
     }));
   }
+
   startTime() {
     Timer.periodic(const Duration(milliseconds: 200), (timer) {
       if (!mounted) return;

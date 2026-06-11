@@ -42,10 +42,9 @@ class _SignInState extends State<SignIn> {
 
   Future<void> _LogIn() async {
     // _formKey.currentState!.save();
-    if (isLoading) {
-      return;
-    }
-    if (!mounted) return;
+    log("========");
+
+    // if (!mounted) return;
     setState(() {
       isLoading = true;
     });
@@ -68,7 +67,7 @@ class _SignInState extends State<SignIn> {
         var loginResponse = LoginUserPasswordResponse.fromJson(map);
 
         if (loginResponse.settings.success == "1") {
-          if (!mounted) return;
+          // if (!mounted) return;
           setState(() {
             isLoading = false;
           });
@@ -96,7 +95,7 @@ class _SignInState extends State<SignIn> {
             );
           });
         } else {
-          if (!mounted) return;
+          // if (!mounted) return;
           setState(() {
             isLoading = false;
           });
@@ -109,7 +108,7 @@ class _SignInState extends State<SignIn> {
           );
         }
       } else {
-        if (!mounted) return;
+        // if (!mounted) return;
         setState(() {
           isLoading = false;
         });

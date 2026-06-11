@@ -11,6 +11,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart'as http;
 import 'package:lottie/lottie.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:techflowmobileapp/Inward/InwardListScreen.dart';
 import 'package:techflowmobileapp/Utils/Tools.dart';
 
 import '../Material_Issue/Material_Issue_ItemList.dart';
@@ -365,11 +366,29 @@ class _ScannerForInwardState extends State<ScannerForInward> {
         setState(() {
           isLoading = false;
         });
-        Fluttertoast.showToast(
-          msg: DoPandingListData.settings.message??"NO Data Available",
-          textColor: Colors.white,
-          backgroundColor: Colors.red,
-          gravity: ToastGravity.CENTER,
+        // Fluttertoast.showToast(
+        //   msg: DoPandingListData.settings.message??"NO Data Available",
+        //   textColor: Colors.white,
+        //   backgroundColor: Colors.red,
+        //   gravity: ToastGravity.CENTER,
+        // );
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Message"),
+              content: Text(DoPandingListData.settings.message ?? "Invalid Data"),
+              actions: [
+                TextButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => InwardListScreen(),));// Close the dialog
+                  },
+                ),
+              ],
+            );
+          },
         );
       }
     } else {
